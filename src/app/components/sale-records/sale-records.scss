@@ -1,0 +1,114 @@
+.page-container {
+  padding: 24px;
+  max-width: auto;
+  margin: 0 auto;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.summary-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  min-height: 140px;
+}
+
+.summary-card h2 {
+  margin-top: 12px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.sale-form-card {
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.full-width {
+  flex: 1;
+}
+
+.total-card {
+  margin: 16px 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 12px;
+}
+
+.revenue-text {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+mat-chip {
+  min-width: 60px;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+
+  .header-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+
+  .summary-container {
+    grid-template-columns: 1fr;
+  }
+}

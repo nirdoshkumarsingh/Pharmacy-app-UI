@@ -1,0 +1,217 @@
+<div class="page-container">
+    <div class="header-section">
+        <h2>Sale Records</h2>
+        <button mat-raised-button color="primary" (click)="toggleSaleForm()">
+            <mat-icon>
+                {{ showSaleForm ? 'close' : 'add' }}
+            </mat-icon>
+            {{ showSaleForm ? 'Close Form' : 'Record Sale' }}
+        </button>
+    </div>
+
+    <div class="summary-container">
+        <mat-card class="summary-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar>
+                    currency_rupee
+                </mat-icon>
+                <mat-card-title>
+                    Total Revenue
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <h2>
+                    ₹{{ formatPrice(totalRevenue) }}
+                </h2>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="summary-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar>
+                    receipt_long
+                </mat-icon>
+                <mat-card-title>
+                    Total Sales
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <h2>
+                    {{ sales.length }}
+                </h2>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <mat-card *ngIf="showSaleForm" class="sale-form-card">
+        <mat-card-header>
+            <mat-card-title>
+                Record New Sale
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form #saleForm="ngForm">
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>
+                            Select Medicine
+                        </mat-label>
+                        <mat-select name="medicineId" [(ngModel)]="newSale.medicineId"
+                            (selectionChange)="onMedicineChange()">
+                            <mat-option [value]="0">
+                                Select Medicine
+                            </mat-option>
+                            <mat-option *ngFor="let med of medicines" [value]="med.id">
+                                {{ med.medicineName }}
+                                (Stock: {{ med.quantity }})
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>
+                            Quantity Sold
+                        </mat-label>
+                        <input matInput type="number" min="1" name="quantitySold" [(ngModel)]="newSale.quantitySold">
+                        <mat-hint *ngIf="getSelectedMedicineDetails()">
+                            Available:
+                            {{ getSelectedMedicineDetails()?.quantity }}
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>
+                            Customer Name
+                        </mat-label>
+                        <input matInput name="customerName" [(ngModel)]="newSale.customerName">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>
+                            Unit Price
+                        </mat-label>
+                        <input matInput disabled [value]="getSelectedMedicineDetails()?.price || 0">
+                    </mat-form-field>
+                </div>
+                <mat-card class="total-card">
+                    <mat-card-content>
+                        <strong>
+                            Total Amount:
+                        </strong>
+                        ₹{{
+                        (
+                        newSale.quantitySold *
+                        (getSelectedMedicineDetails()?.price || 0)
+                        ) | number:'1.2-2'
+                        }}
+                    </mat-card-content>
+                </mat-card>
+                <div class="action-buttons">
+                    <button mat-raised-button color="primary" type="button" [disabled]="isRecording"
+                        (click)="recordSale()">
+                        <mat-icon>
+                            save
+                        </mat-icon>
+                        {{
+                        isRecording
+                        ? 'Recording...'
+                        : 'Record Sale'
+                        }}
+                    </button>
+                    <button mat-stroked-button color="accent" type="button" (click)="resetSaleForm()">
+                        <mat-icon>
+                            refresh
+                        </mat-icon>
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+    <!-- Loading -->
+    <div class="loading-container" *ngIf="isLoading">
+        <mat-spinner>
+        </mat-spinner>
+    </div>
+    <mat-card *ngIf="!isLoading && sales.length">
+        <mat-card-header>
+            <mat-card-title>
+                Sales History
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <table mat-table [dataSource]="sales" class="full-width">
+                <ng-container matColumnDef="saleDate">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Date
+                    </th>
+                    <td mat-cell *matCellDef="let sale">
+                        {{ formatDate(sale.saleDate) }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="medicineName">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Medicine
+                    </th>
+                    <td mat-cell *matCellDef="let sale">
+                        {{ sale.medicineName }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="quantitySold">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Quantity
+                    </th>
+                    <td mat-cell *matCellDef="let sale">
+                        <mat-chip>
+                            {{ sale.quantitySold }}
+                        </mat-chip>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="totalPrice">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Amount
+                    </th>
+                    <td mat-cell *matCellDef="let sale">
+                        ₹{{ formatPrice(sale.totalPrice) }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="customerName">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Customer
+                    </th>
+                    <td mat-cell *matCellDef="let sale">
+                        {{ sale.customerName }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>
+                        Actions
+                    </th>
+                    <td mat-cell *matCellDef="let sale">
+                        <button mat-icon-button color="warn" (click)="deleteSale(sale.id)">
+                            <mat-icon>
+                                delete
+                            </mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns">
+                </tr>
+                <tr mat-row *matRowDef="let row;columns: displayedColumns">
+                </tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- No Data -->
+
+    <mat-card *ngIf="!isLoading && !sales.length">
+        <mat-card-content>
+            <p>
+                No sales recorded yet.
+            </p>
+            <button mat-raised-button color="primary" (click)="toggleSaleForm()">
+                Record First Sale
+            </button>
+        </mat-card-content>
+    </mat-card>
+</div>

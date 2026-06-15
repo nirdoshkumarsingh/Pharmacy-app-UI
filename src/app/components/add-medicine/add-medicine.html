@@ -1,0 +1,148 @@
+<mat-card class="dialog-card">
+  <mat-toolbar color="primary" class="dialog-toolbar">
+    <div>
+      <p class="dialog-subtitle">Add New Medicine</p>
+    </div>
+    <!-- <span class="spacer"></span>
+    <button
+      mat-icon-button
+      aria-label="Close dialog"
+      (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button> -->
+  </mat-toolbar>
+
+  <form
+    #medicineForm="ngForm"
+    (ngSubmit)="onSubmit(medicineForm)"
+    class="medicine-form">
+
+    <mat-card-content>
+      <div class="form-section">
+        <div class="section-label">Basic Information</div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Medicine Name *</mat-label>
+          <input
+            matInput
+            name="medicineName"
+            [(ngModel)]="medicine.medicineName"
+            required
+            #medicineName="ngModel">
+          <mat-error *ngIf="medicineName.invalid && medicineName.touched">
+            Medicine name is required.
+          </mat-error>
+          <mat-icon matSuffix>medication</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Brand *</mat-label>
+          <input
+            matInput
+            name="brand"
+            [(ngModel)]="medicine.brand"
+            required
+            #brand="ngModel">
+          <mat-error *ngIf="brand.invalid && brand.touched">
+            Brand is required.
+          </mat-error>
+          <mat-icon matSuffix>business</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Inventory Details</div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-col">
+            <mat-label>Expiry Date *</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [min]="minExpiryDate"
+              name="expiryDate"
+              [(ngModel)]="medicine.expiryDate"
+              required
+              #expiryDate="ngModel">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="expiryDate.invalid && expiryDate.touched">
+              Expiry date is required and must be in the future.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-col">
+            <mat-label>Quantity *</mat-label>
+            <input
+              matInput
+              type="number"
+              min="0"
+              name="quantity"
+              [(ngModel)]="medicine.quantity"
+              required
+              #quantity="ngModel">
+            <mat-error *ngIf="quantity.invalid && quantity.touched">
+              Quantity is required and must be 0 or greater.
+            </mat-error>
+            <mat-icon matSuffix>inventory_2</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Price (₹) *</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            step="0.01"
+            name="price"
+            [(ngModel)]="medicine.price"
+            required
+            #price="ngModel">
+          <mat-error *ngIf="price.invalid && price.touched">
+            Price is required and must be 0 or greater.
+          </mat-error>
+          <mat-icon matSuffix>currency_rupee</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Additional Information</div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes</mat-label>
+          <textarea
+            matInput
+            rows="3"
+            name="notes"
+            [(ngModel)]="medicine.notes"
+            placeholder="Any additional notes or instructions"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-actions align="end" class="modal-footer">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="onCancel()">
+        Cancel
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="isSubmitting">
+        <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+        <mat-spinner
+          *ngIf="isSubmitting"
+          diameter="20"
+          class="spinner"></mat-spinner>
+        {{ isSubmitting ? 'Saving...' : 'Add Medicine' }}
+      </button>
+    </mat-card-actions>
+  </form>
+</mat-card>
