@@ -53,7 +53,7 @@ export class MedicineListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
   ) {
-    // Configure sorting
+    
     this.dataSource.sortingDataAccessor = (item: Medicine, property: string) => {
       switch (property) {
         case 'medicineName':

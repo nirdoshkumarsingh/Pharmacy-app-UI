@@ -22,19 +22,14 @@ import { MedicineService } from '../../services/medicine-service';
   styleUrls: ['./sale-records.scss']
 })
 export class SaleRecordsComponent implements OnInit {
-
   sales: MedicineSale[] = [];
   medicines: Medicine[] = [];
-
   isLoading = false;
   isRecording = false;
-
   totalRevenue = 0;
-
   errorMessage = '';
-
   showSaleForm = false;
-
+  
   displayedColumns: string[] = [
     'medicineName',
     'customerName',
@@ -65,9 +60,7 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   loadSales(): void {
-
     this.isLoading = true;
-
     this.saleService.getAllSales().subscribe({
       next: (data) => {
         this.sales = data;
@@ -82,7 +75,6 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   loadMedicines(): void {
-
     this.medicineService
       .getAllMedicines()
       .subscribe({
@@ -93,7 +85,6 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   loadRevenue(): void {
-
     this.saleService
       .getTotalRevenue()
       .subscribe({
@@ -105,7 +96,6 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   toggleSaleForm(): void {
-
     this.showSaleForm =
       !this.showSaleForm;
 
@@ -115,7 +105,6 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   onMedicineChange(): void {
-
     const medicine =
       this.medicines.find(
         x => x.id === this.newSale.medicineId
@@ -128,18 +117,14 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   recordSale(): void {
-
     if (!this.validateSaleForm()) {
       return;
     }
-
     this.isRecording = true;
-
     this.saleService
       .recordSale(this.newSale)
       .subscribe({
         next: () => {
-
           this.snackBar.open(
             'Sale recorded successfully',
             'Close',
@@ -147,18 +132,13 @@ export class SaleRecordsComponent implements OnInit {
               duration: 3000
             }
           );
-
           this.isRecording = false;
-
           this.showSaleForm = false;
-
           this.resetSaleForm();
-
           this.loadSales();
           this.loadRevenue();
         },
         error: () => {
-
           this.snackBar.open(
             'Failed to record sale',
             'Close',
@@ -166,44 +146,36 @@ export class SaleRecordsComponent implements OnInit {
               duration: 3000
             }
           );
-
           this.isRecording = false;
         }
       });
   }
 
   validateSaleForm(): boolean {
-
     if (this.newSale.medicineId === 0) {
-
       this.snackBar.open(
         'Select a medicine',
         'Close',
         { duration: 3000 }
       );
-
       return false;
     }
 
     if (!this.newSale.customerName?.trim()) {
-
       this.snackBar.open(
         'Customer name required',
         'Close',
         { duration: 3000 }
       );
-
       return false;
     }
 
     if (this.newSale.quantitySold <= 0) {
-
       this.snackBar.open(
         'Quantity must be greater than 0',
         'Close',
         { duration: 3000 }
       );
-
       return false;
     }
 
@@ -217,25 +189,20 @@ export class SaleRecordsComponent implements OnInit {
       medicine.quantity <
       this.newSale.quantitySold
     ) {
-
       this.snackBar.open(
         `Only ${medicine.quantity} units available`,
         'Close',
         { duration: 3000 }
       );
-
       return false;
     }
-
     return true;
   }
 
   deleteSale(id?: number): void {
-
     if (!id) {
       return;
     }
-
     if (!confirm(
       'Delete this sale record?'
     )) {
@@ -246,7 +213,6 @@ export class SaleRecordsComponent implements OnInit {
       .deleteSale(id)
       .subscribe({
         next: () => {
-
           this.snackBar.open(
             'Sale deleted',
             'Close',
@@ -254,7 +220,6 @@ export class SaleRecordsComponent implements OnInit {
               duration: 3000
             }
           );
-
           this.loadSales();
           this.loadRevenue();
         }
@@ -262,7 +227,6 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   resetSaleForm(): void {
-
     this.newSale = {
       medicineId: 0,
       medicineName: '',
@@ -282,7 +246,6 @@ export class SaleRecordsComponent implements OnInit {
   }
 
   getSelectedMedicineDetails() {
-
     return this.medicines.find(
       x => x.id === this.newSale.medicineId
     );
