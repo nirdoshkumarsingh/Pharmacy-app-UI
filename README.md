@@ -2,6 +2,14 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
 
+# Sample Output
+Medicine List
+<img width="960" height="419" alt="image" src="https://github.com/user-attachments/assets/a126203e-2ed5-4daf-a48b-7c1aef807a2d" />
+
+Sales
+<img width="960" height="420" alt="image" src="https://github.com/user-attachments/assets/774ec5b3-0ae6-499f-8b9b-40ed87aabc83" />
+
+
 ## Development server
 
 To start a local development server, run:
